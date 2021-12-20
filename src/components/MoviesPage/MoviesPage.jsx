@@ -26,7 +26,7 @@ const MoviesPage = ({ search }) => {
             <input type="text" autoComplete="off" autoFocus placeholder="Search" />
 
             <button type="sybmit">
-              <spam>{search}</spam>
+              <span>{search}</span>
             </button>
           </form>
         </div>

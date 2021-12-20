@@ -3,6 +3,7 @@ import Reviews from "../Reviews";
 import Button from "../Button";
 import Title from "../Title";
 import InfoMovies from "../InfoMovies";
+
 const MovieDetailsPage = () => {
   return (
     <>

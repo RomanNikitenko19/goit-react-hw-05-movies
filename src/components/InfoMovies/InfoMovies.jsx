@@ -1,6 +1,6 @@
-import PropTypes from "prop-types";
+//import PropTypes from "prop-types";
 import Title from "../Title";
-const InfoMovies = ({title}) => {
+const InfoMovies = () => {
   return (
     <>
       <div>
@@ -8,7 +8,7 @@ const InfoMovies = ({title}) => {
           <img src="" alt="" />
         </div>
         <div>
-          <Title>{title}</Title>
+          <Title />
           <div></div>
           <div></div>
           <div></div>
@@ -21,7 +21,7 @@ const InfoMovies = ({title}) => {
 };
 
 InfoMovies.propTypes = {
-  title: PropTypes.string.isRequired,
+  //title: PropTypes.string.isRequired,
 }
 
 export default InfoMovies;
