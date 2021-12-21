@@ -1,5 +1,4 @@
 //An example request looks like:
-//https://api.themoviedb.org/3/movie/550?api_key=299cdced1173d29461838bac19c38b55
 
 //список самых популярных фильмов на сегодня
 //https://api.themoviedb.org/3/trending/movie/day?api_key=<<api_key>>
@@ -29,8 +28,8 @@ const searchMovie = async search => {
   return res.ok ? res.json() : Promise.reject(new Error("somewhere error"));
 };
 
-const infoMovies = async id => {
-  const res = fetch(`${BASE_URL}movie/${id}/?api_key=${API_KEY}`);
+const infoMovie = async id => {
+  const res = fetch(`${BASE_URL}movie/${id}/?api_key=${API_KEY}`); //&append_to_response=videos !!!
   return res.ok ? res.json() : Promise.reject(new Error("somewhere error"));
 }
 
@@ -44,4 +43,5 @@ const reviewsForAMovie = async id => {
   return res.ok ? res.json() : Promise.reject(new Error("somewhere error"));
 }
 
-export { trendingMovies, searchMovie, infoMovies, infoAboutActors, reviewsForAMovie };
+export { trendingMovies, searchMovie, infoMovie, infoAboutActors, reviewsForAMovie };
+
