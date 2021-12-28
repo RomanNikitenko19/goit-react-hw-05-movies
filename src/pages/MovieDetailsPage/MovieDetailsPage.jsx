@@ -1,14 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense, lazy } from "react";
 import { useParams, NavLink, Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router-dom";
 import * as api from "../../services/api";
-import LoaderSpinner from "../LoaderSpinner";
-import Cast from "../Cast";
-import Reviews from "../Reviews";
-import Button from "../Button";
-import Title from "../Title";
-import InfoMovie from "../InfoMovie";
+import LoaderSpinner from "../../components/LoaderSpinner";
+import Button from "../../components/Button";
+import Title from "../../components/Title";
+import InfoMovie from "../../components/InfoMovie";
 import notImg from "../../images/not_img.jpg";
 import s from "./MovieDetailsPage.module.css";
+
+const Cast = lazy(() => import('../../components/Cast') /* webpackChunkName: "Cast" */);
+const Reviews = lazy(() => import('../../components/Reviews')  /* webpackChunkName: "Revievs" */)
 
 const BASE_URL_IMG = "https://image.tmdb.org/t/p/w500";
 
@@ -102,18 +103,20 @@ const MovieDetailsPage = () => {
         </section>
       </main>
 
-      <Switch>
-        <Route path={`${match.path}/cast`}>
-          {/* <Route exact path={`/movies/:movieId/cast`}> */}
-          <Cast />
-        </Route>
-        <Route path={`${match.path}/reviews`}>
-          {/* <Route exact path={`/movies/:movieId/reviews`}> */}
-          <Reviews />
-        </Route>
+      <Suspense fallback={<LoaderSpinner />}>
+        <Switch>
+          <Route path={`${match.path}/cast`}>
+            {/* <Route exact path={`/movies/:movieId/cast`}> */}
+            <Cast />
+          </Route>
+          <Route path={`${match.path}/reviews`}>
+            {/* <Route exact path={`/movies/:movieId/reviews`}> */}
+            <Reviews />
+          </Route>
 
-        {/* <Route render={() => <Redirect to={match.url} />} /> */}
-      </Switch>
+          {/* <Route render={() => <Redirect to={match.url} />} /> */}
+          </Switch>
+        </Suspense>
     </>
   );
 };

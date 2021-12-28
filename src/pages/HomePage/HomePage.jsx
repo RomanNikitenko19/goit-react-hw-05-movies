@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import * as api from "../../services/api";
-import LoaderSpinner from "../LoaderSpinner";
-import Title from "../Title";
+import LoaderSpinner from "../../components/LoaderSpinner";
+import Title from "../../components/Title";
 import s from "./HomePage.module.css";
 
 const HomePage = () => {

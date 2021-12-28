@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { Link, useRouteMatch, useLocation } from "react-router-dom";
 import * as api from "../../services/api";
 import * as localStorage from "../../services/localStorage";
-import LoaderSpinner from "../LoaderSpinner";
-import Title from "../Title";
+import LoaderSpinner from "../../components/LoaderSpinner";
+import Title from "../../components/Title";
 import s from './MoviesPage.module.css';
 
 const MoviesPage = () => {

@@ -1,10 +1,14 @@
-import { Suspense } from "react";
+import { Suspense, lazy } from "react";
 import { Route, Switch, Redirect} from "react-router-dom";
-import HomePage from "./components/HomePage";
-import MoviesPage from "./components/MoviesPage";
-import MovieDetailsPage from "./components/MovieDetailsPage/MovieDetailsPage";
 import Navigation from './components/Navigation';
 import LoaderSpinner from "./components/LoaderSpinner";
+
+const HomePage = lazy(() => import("./pages/HomePage/HomePage") /* webpackChunkName: "Home___Page" */);
+const MoviesPage = lazy(() => import("./pages/MoviesPage/MoviesPage") /* webpackChunkName: "Movies___Page" */);
+const MovieDetailsPage = lazy(
+  () => import("./pages/MovieDetailsPage/MovieDetailsPage") /* webpackChunkName: "Movie___Details___Page" */
+);
+
 
 function App() {
 
@@ -13,7 +17,7 @@ function App() {
       <header>
         <Navigation />
       </header>
-      
+
       <Suspense fallback={<LoaderSpinner />}>
         <Switch>
           <Route exact path="/">

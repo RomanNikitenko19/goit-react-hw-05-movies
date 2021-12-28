@@ -46,6 +46,18 @@ const Reviews = () => {
             ))}</ul>)
           : (<Title title="We don't have any revievs for this movie" />)
         }
+        {/* {reviews && reviews.length ? (
+          <ul className={s.list}>
+            {reviews.map(({ id, author, content }) => (
+              <li key={id} className={s.item}>
+                <p>{author}</p>
+                <p>{content}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <Title title="We don't have any revievs for this movie" />
+        )} */}
       </div>
     </>
   );

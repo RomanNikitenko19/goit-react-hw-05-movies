@@ -41,12 +41,14 @@ const Cast = () => {
         {actors && (
           <ul className={s.list}>
             {actors.map(({ id, profile_path, original_name }) => (
-              <li key={id} className={s.item}>
-                <div className={s.wrapperImg}>
-                  <img src={profile_path ? BASE_URL_IMG + profile_path : notImg} alt={original_name} />
-                </div>
-                <h3 className={s.title}>{original_name}</h3>
-              </li>
+                <li key={id} className={s.item}>
+                  <div className={s.wrapperImg}>
+                    <img src={profile_path ? BASE_URL_IMG + profile_path : notImg} alt={original_name} />
+                  </div>
+                  <div className={s.wrapperText}>
+                    <h3 className={s.title}>{original_name}</h3>
+                  </div>
+                </li>
             ))}
           </ul>
         )}
