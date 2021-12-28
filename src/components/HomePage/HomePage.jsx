@@ -1,62 +1,58 @@
 import { useState, useEffect } from "react";
-import * as api from "../../services/api/api";
-import LoaderSpinner from '../LoaderSpinner';
+import { Link, useLocation } from "react-router-dom";
+import * as api from "../../services/api";
+import LoaderSpinner from "../LoaderSpinner";
 import Title from "../Title";
+import s from "./HomePage.module.css";
 
-const HomePage = ({getId}) => {
+const HomePage = () => {
   const [trendingMovies, setTretdingMovies] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const location = useLocation();
 
-    useEffect(() => {
-      const dataFetch = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-          const data = await api.trendingMovies();
-          setTretdingMovies((prevTrendingMovies) => [...prevTrendingMovies, ...data.results]);
-        } catch (error) {
-          setError(error.message);
-        } finally {
-          setLoading(false);
-        }
-      };
-      dataFetch();
-    }, [setTretdingMovies]);
-
-  // console.log(trendingMovies);
+  useEffect(() => {
+    const dataFetch = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await api.trendingMovies();
+        setTretdingMovies((prevTrendingMovies) => [...prevTrendingMovies, ...data.results]);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    dataFetch();
+  }, [setTretdingMovies]);
 
   return (
     <>
-      <header>
-        <div>
-          <nav>
-            <ul>
-              <li>
-                <a href="./">Home</a>
-              </li>
-              <li>
-                <a href="./">Movies</a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </header>
-
       <main>
-        <section>
+        <section className={s.section}>
+          <div className={s.container}>
           <Title title="Trending todey" />
           {error && <Title title={error} />}
           {loading && <LoaderSpinner />}
           {trendingMovies.length > 0 && (
-            <ul>
+            <ul className={s.list}>
               {trendingMovies.map(({ original_title, id }) => (
-                <li key={id} onClick={() => getId(id)}>
-                  <a href="./">{original_title}</a>
+                <li key={id} className={s.item}>
+                  {/* <Link to={`${url}/${id}`}>{original_title}</Link> */}
+                  <Link
+                    to={{
+                      pathname: `/movies/${id}`,
+                      state: { from: location },
+                    }}
+                  >
+                    {original_title}
+                  </Link>
                 </li>
               ))}
             </ul>
-          )}
+            )}
+            </div>
         </section>
       </main>
     </>

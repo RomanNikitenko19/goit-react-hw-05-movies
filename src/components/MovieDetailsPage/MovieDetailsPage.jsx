@@ -1,38 +1,46 @@
 import { useState, useEffect } from "react";
-import * as api from "../../services/api/api";
+import { useParams, NavLink, Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router-dom";
+import * as api from "../../services/api";
 import LoaderSpinner from "../LoaderSpinner";
 import Cast from "../Cast";
 import Reviews from "../Reviews";
 import Button from "../Button";
 import Title from "../Title";
 import InfoMovie from "../InfoMovie";
+import notImg from "../../images/not_img.jpg";
+import s from "./MovieDetailsPage.module.css";
 
-const MovieDetailsPage = ({id}) => {
+const BASE_URL_IMG = "https://image.tmdb.org/t/p/w500";
+
+const MovieDetailsPage = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  // const [idMovie, setIdMovie] = useState(null);
-  const [poster, setPoster] = useState(null);
-  const [movieTitle, setMovieTitle] = useState(null);
-  const [userScore, setUserScore] = useState(null);
-  const [overliew, setOverliew] = useState(null);
-  const [genres, setGenres] = useState(null);
+  const [infoMovie, setInfoMovie] = useState(null); //object
 
-  // setIdMovie(id);
+  const { movieId } = useParams();
+  const match = useRouteMatch();
+  const history = useHistory();
+  const location = useLocation();
+
+  // const handleReturn = () => {
+  //   history.goBack();
+  // }
+
+  const handleReturn = () => {
+    history.push(location?.state?.from ?? "/");
+  };
+
+  const gradeNormalize = (str) => {
+    return `${(str * 10) / 100}%`;
+  };
 
   useEffect(() => {
-    if (!id) return;
-
     const dataFetch = async () => {
       setLoading(true);
       setError(null);
       try {
-        const data = await api.infoMovie(id).then(res=> console.log(res));
-        const { poster_path, original_title, vote_average, overview, genres } = data;
-        setPoster(poster_path);
-        setMovieTitle(original_title);
-        setUserScore(vote_average);
-        setOverliew(overview);
-        setGenres(genres.name);
+        const data = await api.infoMovie(movieId);
+        setInfoMovie(data);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -40,51 +48,72 @@ const MovieDetailsPage = ({id}) => {
       }
     };
     dataFetch();
-  }, []);
+  }, [movieId, history]);
 
   return (
     <>
-      <header>
-        <div>
-          <nav>
-            <ul>
-              <li>
-                <a href="http://">Home</a>
-              </li>
-              <li>
-                <a href="http://">Movies</a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </header>
-
       <main>
-        <section>
-          <div>
-            <Button text="Go back" />
+        <section className={s.section}>
+          <div className={s.container}>
+            <Button handleReturn={handleReturn} text="Go back" />
+
             {loading && <LoaderSpinner />}
             {error && <Title title={error} />}
-            <InfoMovie
-              poster={poster}
-              movieTitle={movieTitle}
-              userScore={userScore}
-              overliew={overliew}
-              genres={genres}
-            />
+            {infoMovie && (
+              <InfoMovie
+                poster={infoMovie?.poster_path ? BASE_URL_IMG + infoMovie.poster_path : notImg}
+                movieTitle={infoMovie?.original_title}
+                userScore={gradeNormalize(infoMovie?.vote_average)}
+                overliew={infoMovie?.overview}
+                genres={infoMovie?.genres.map(({ name }) => name).join(" ")}
+              />
+            )}
           </div>
         </section>
 
-        <section>
-          <div>
+        <section className={s.section}>
+          <div className={s.container}>
             <Title title="additional information" />
-            <ul>
-              <Cast />
-              <Reviews />
+            <ul className={s.list}>
+              <li className={s.item}>
+                {/* <NavLink to={`${match.url}/cast/`}> */}
+                <NavLink
+                  to={{
+                    pathname: `${match.url}/cast`,
+                    state: { from: location?.state?.from ?? "./" },
+                  }}
+                >
+                  Cast
+                </NavLink>
+              </li>
+              <li className={s.item}>
+                {/* <NavLink to={`${match.url}/reviews/`}> */}
+                <NavLink
+                  to={{
+                    pathname: `${match.url}/reviews`,
+                    state: { from: location?.state?.from ?? "./" },
+                  }}
+                >
+                  Reviews
+                </NavLink>
+              </li>
             </ul>
           </div>
         </section>
       </main>
+
+      <Switch>
+        <Route path={`${match.path}/cast`}>
+          {/* <Route exact path={`/movies/:movieId/cast`}> */}
+          <Cast />
+        </Route>
+        <Route path={`${match.path}/reviews`}>
+          {/* <Route exact path={`/movies/:movieId/reviews`}> */}
+          <Reviews />
+        </Route>
+
+        {/* <Route render={() => <Redirect to={match.url} />} /> */}
+      </Switch>
     </>
   );
 };

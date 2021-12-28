@@ -1,0 +1,31 @@
+.activeLink {
+  color: red;
+}
+
+.section {
+  padding-top: 30px;
+  padding-bottom: 30px;
+
+  /* background-color: silver */
+  background-color: #F7F7F7;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.12),
+  0px 1px 1px rgba(0, 0, 0, 0.14),
+  0px 2px 1px rgba(0, 0, 0, 0.2);
+  border-radius: 0px 0px 4px 4px;
+}
+
+.container {
+  width: 1200px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin: 0 auto;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.item:nth-last-child() {
+  padding-bottom: 10px;
+}

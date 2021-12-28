@@ -1,18 +1,34 @@
-import { useState } from "react";
-import HomePage from './components/HomePage';
-import MoviesPage from './components/MoviesPage';
+import { Suspense } from "react";
+import { Route, Switch, Redirect} from "react-router-dom";
+import HomePage from "./components/HomePage";
+import MoviesPage from "./components/MoviesPage";
 import MovieDetailsPage from "./components/MovieDetailsPage/MovieDetailsPage";
-function App() {
-  const [id, setId] = useState(null);
+import Navigation from './components/Navigation';
+import LoaderSpinner from "./components/LoaderSpinner";
 
-  const getId = id =>setId(id)
+function App() {
 
   return (
     <>
-      <h1>hello</h1>
-      <HomePage getId={getId}/>
-      <MoviesPage getId={getId}/>
-      <MovieDetailsPage id={id} />
+      <header>
+        <Navigation />
+      </header>
+      
+      <Suspense fallback={<LoaderSpinner />}>
+        <Switch>
+          <Route exact path="/">
+            <HomePage />
+          </Route>
+          <Route exact path="/movies">
+            <MoviesPage />
+          </Route>
+          <Route path="/movies/:movieId">
+            <MovieDetailsPage />
+          </Route>
+
+          <Redirect to="/" />
+        </Switch>
+      </Suspense>
     </>
   );
 }

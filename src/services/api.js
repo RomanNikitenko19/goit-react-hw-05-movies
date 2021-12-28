@@ -29,7 +29,7 @@ const searchMovie = async search => {
 };
 
 const infoMovie = async id => {
-  const res = fetch(`${BASE_URL}movie/${id}/?api_key=${API_KEY}`); //&append_to_response=videos !!!
+  const res = await fetch(`${BASE_URL}movie/${id}?api_key=${API_KEY}`); //&append_to_response=videos !!!
   return res.ok ? res.json() : Promise.reject(new Error("somewhere error"));
 }
 

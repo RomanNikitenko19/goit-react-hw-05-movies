@@ -1,0 +1,14 @@
+.container {
+  width: 1200px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin: 0 auto;
+}
+
+.list {
+  padding: 20px;
+}
+
+.item:nth-last-child() {
+  padding-bottom: 10px;
+}

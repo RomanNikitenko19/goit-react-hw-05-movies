@@ -1,29 +1,35 @@
 import { useState, useEffect } from "react";
-import * as api from '../../services/api/api';
+import { Link, useRouteMatch, useLocation } from "react-router-dom";
+import * as api from "../../services/api";
+import * as localStorage from "../../services/localStorage";
 import LoaderSpinner from "../LoaderSpinner";
 import Title from "../Title";
-// import PropTypes from "prop-types";
+import s from './MoviesPage.module.css';
 
-const MoviesPage = ({getId}) => {
-  const [input, setInput] = useState('');
-  const [search, setSearch] = useState('');
+const MoviesPage = () => {
+  const [input, setInput] = useState("");
+  const [search, setSearch] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [movies, setMovies] = useState([]);
 
-  const handleChange = e => {
+  const match = useRouteMatch();
+  const location = useLocation();
+  // const history = useHistory();useHistory
+  const LOCALSTORAGE_KEY = "search";
+
+  const handleChange = (e) => {
     const { value } = e.target;
     setInput(value);
-  }
+  };
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!input) return;
-
+    // history.push({ ...location, search: `search=${input}` }); useHistory
     setSearch(input);
-    setInput('');
-  }
+  };
 
   useEffect(() => {
     if (!search) return;
@@ -33,7 +39,8 @@ const MoviesPage = ({getId}) => {
       setError(null);
       try {
         const data = await api.searchMovie(search);
-        setMovies((prevMovies) => [...prevMovies, ...data.results]);
+        // setMovies((prevMovies) => [...prevMovies, ...data.results]);
+        setMovies([...data.results]);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -43,26 +50,23 @@ const MoviesPage = ({getId}) => {
     dataFetch();
   }, [search]);
 
+  useEffect(() => {
+    const query = localStorage.get(LOCALSTORAGE_KEY);
+    if (query) {
+      // setInput(query);
+      setSearch(query);
+    }
+  }, [])
+
+  useEffect(() => {
+    if (search) localStorage.save(LOCALSTORAGE_KEY, search);
+  }, [search]);
+
   return (
     <>
-      <header>
-        <div>
-          <nav>
-            <ul>
-              <li>
-                <a href="http://">Home</a>
-              </li>
-              <li>
-                <a href="http://">Movies</a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </header>
-
       <main>
-        <section>
-          <div>
+        <section className={s.section}>
+          <div className={s.container}>
             <form onSubmit={handleSubmit}>
               <input
                 type="text"
@@ -80,11 +84,19 @@ const MoviesPage = ({getId}) => {
             {error && <Title title={error} />}
             {loading && <LoaderSpinner />}
 
-            {movies.length > 0 && (
-              <ul>
+            {movies && (
+              <ul className={s.list}>
                 {movies.map(({ original_title, id }) => (
-                  <li key={id} onClick={() => getId(id)}>
-                    <a href="./">{original_title}</a>
+                  <li key={id} className={s.item}>
+                    <Link
+                      to={{
+                        // pathname: `/movies/${id}`,
+                        pathname: `${match.url}/${id}`,
+                        state: { from: location },
+                      }}
+                    >
+                      {original_title}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -95,9 +107,5 @@ const MoviesPage = ({getId}) => {
     </>
   );
 };
-
-// MoviesPage.propTypes = {
-//   search: PropTypes.string.isRequired,
-// };
 
 export default MoviesPage;
